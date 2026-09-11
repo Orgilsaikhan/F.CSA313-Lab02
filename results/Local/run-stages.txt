@@ -1,0 +1,72 @@
+
+
+  █ THRESHOLDS 
+
+    checks
+    ✓ 'rate>0.99' rate=100.00%
+
+    http_req_duration
+    ✗ 'p(95)<500' p(95)=576.85ms
+    ✓ 'p(99)<1000' p(99)=728.19ms
+
+      {endpoint:chat}
+      ✓ 'p(95)<800' p(95)=722.26ms
+
+      {endpoint:chatbots}
+      ✗ 'p(95)<300' p(95)=375.92ms
+
+      {endpoint:conversations}
+      ✗ 'p(95)<400' p(95)=561.28ms
+
+      {endpoint:health}
+      ✓ 'p(95)<50' p(95)=33.18ms
+
+      {endpoint:me}
+      ✗ 'p(95)<200' p(95)=505.31ms
+
+    http_req_failed
+    ✓ 'rate<0.01' rate=0.00%
+
+    iteration_duration
+    ✓ 'p(95)<3000' p(95)=2.62s
+
+
+  █ TOTAL RESULTS 
+
+    checks_total.......: 20832   159.244579/s
+    checks_succeeded...: 100.00% 20832 out of 20832
+    checks_failed......: 0.00%   0 out of 20832
+
+    ✓ health 200
+    ✓ me 200
+    ✓ me has user
+    ✓ chatbots 200
+    ✓ chatbots list
+    ✓ chat 200
+    ✓ chat answered
+    ✓ conversations 200
+
+    HTTP
+    http_req_duration..............: avg=139.84ms min=0s      med=23.2ms  max=1.25s    p(90)=487.22ms p(95)=576.85ms p(99)=728.19ms
+      { endpoint:chat }............: avg=275.57ms min=860.8µs med=199.9ms max=1.25s    p(90)=652.23ms p(95)=722.26ms p(99)=881.64ms
+      { endpoint:chatbots }........: avg=100.66ms min=3.06ms  med=53.83ms max=708.45ms p(90)=268.63ms p(95)=375.92ms p(99)=524.07ms
+      { endpoint:conversations }...: avg=167.05ms min=5.47ms  med=46.1ms  max=1.02s    p(90)=510.46ms p(95)=561.28ms p(99)=650.87ms
+      { endpoint:health }..........: avg=13.19ms  min=0s      med=5.48ms  max=319.96ms p(90)=18.69ms  p(95)=33.18ms  p(99)=176.93ms
+      { endpoint:me }..............: avg=142.74ms min=2.28ms  med=79.92ms max=758.92ms p(90)=385.14ms p(95)=505.31ms p(99)=609.84ms
+      { expected_response:true }...: avg=139.84ms min=0s      med=23.2ms  max=1.25s    p(90)=487.22ms p(95)=576.85ms p(99)=728.19ms
+    http_req_failed................: 0.00%  0 out of 13021
+    http_reqs......................: 13021  99.535506/s
+
+    EXECUTION
+    iteration_duration.............: avg=1.7s     min=1.02s   med=1.78s   max=3.28s    p(90)=2.49s    p(95)=2.62s    p(99)=2.87s   
+    iterations.....................: 2604   19.905572/s
+    vus............................: 3      min=1          max=99 
+    vus_max........................: 100    min=100        max=100
+
+    NETWORK
+    data_received..................: 26 MB  195 kB/s
+    data_sent......................: 5.7 MB 44 kB/s
+
+
+
+time="2026-09-11T17:08:30+08:00" level=error msg="thresholds on metrics 'http_req_duration, http_req_duration{endpoint:chatbots}, http_req_duration{endpoint:conversations}, http_req_duration{endpoint:me}' have been crossed"

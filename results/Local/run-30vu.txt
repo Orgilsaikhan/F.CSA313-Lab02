@@ -1,0 +1,71 @@
+
+
+  █ THRESHOLDS 
+
+    checks
+    ✓ 'rate>0.99' rate=100.00%
+
+    http_req_duration
+    ✓ 'p(95)<500' p(95)=23.88ms
+    ✓ 'p(99)<1000' p(99)=198.47ms
+
+      {endpoint:chat}
+      ✓ 'p(95)<800' p(95)=40.63ms
+
+      {endpoint:chatbots}
+      ✓ 'p(95)<300' p(95)=20.75ms
+
+      {endpoint:conversations}
+      ✓ 'p(95)<400' p(95)=19.99ms
+
+      {endpoint:health}
+      ✓ 'p(95)<50' p(95)=3.16ms
+
+      {endpoint:me}
+      ✓ 'p(95)<200' p(95)=24.27ms
+
+    http_req_failed
+    ✓ 'rate<0.01' rate=0.00%
+
+    iteration_duration
+    ✓ 'p(95)<3000' p(95)=1.14s
+
+
+  █ TOTAL RESULTS 
+
+    checks_total.......: 13544   221.713012/s
+    checks_succeeded...: 100.00% 13544 out of 13544
+    checks_failed......: 0.00%   0 out of 13544
+
+    ✓ health 200
+    ✓ me 200
+    ✓ me has user
+    ✓ chatbots 200
+    ✓ chatbots list
+    ✓ chat 200
+    ✓ chat answered
+    ✓ conversations 200
+
+    HTTP
+    http_req_duration..............: avg=14.2ms  min=0s      med=8.61ms  max=515.75ms p(90)=18.92ms p(95)=23.88ms p(99)=198.47ms
+      { endpoint:chat }............: avg=25.92ms min=1.65ms  med=16.78ms max=416.55ms p(90)=24.45ms p(95)=40.63ms p(99)=345.27ms
+      { endpoint:chatbots }........: avg=12.47ms min=0s      med=7.82ms  max=497.51ms p(90)=15.54ms p(95)=20.75ms p(99)=101.93ms
+      { endpoint:conversations }...: avg=11.84ms min=510.4µs med=8.7ms   max=236.91ms p(90)=14.76ms p(95)=19.99ms p(99)=95.78ms 
+      { endpoint:health }..........: avg=1.72ms  min=0s      med=943.2µs max=203.4ms  p(90)=2.09ms  p(95)=3.16ms  p(99)=23.87ms 
+      { endpoint:me }..............: avg=19ms    min=0s      med=9.09ms  max=515.75ms p(90)=16.8ms  p(95)=24.27ms p(99)=478.09ms
+      { expected_response:true }...: avg=14.2ms  min=0s      med=8.61ms  max=515.75ms p(90)=18.92ms p(95)=23.88ms p(99)=198.47ms
+    http_req_failed................: 0.00%  0 out of 8466
+    http_reqs......................: 8466   138.587002/s
+
+    EXECUTION
+    iteration_duration.............: avg=1.07s   min=1.02s   med=1.04s   max=2.13s    p(90)=1.07s   p(95)=1.14s   p(99)=1.96s   
+    iterations.....................: 1693   27.714126/s
+    vus............................: 8      min=8         max=30
+    vus_max........................: 30     min=30        max=30
+
+    NETWORK
+    data_received..................: 17 MB  271 kB/s
+    data_sent......................: 3.7 MB 61 kB/s
+
+
+
