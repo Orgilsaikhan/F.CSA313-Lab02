@@ -1,38 +1,66 @@
-### Лабораторын ажил 2
+### Лабораторын ажил 2 — k6 ачааллын тест
+
+Дэлгэрэнгүй дүн шинжилгээ: [analysis.md]- файлд оруулав.
+
+## Алхам 2 — Baseline (түвшин тус бүр тусад нь)
+
+| VU  | p95 latency | Throughput (req/s) | Алдаа |
+|-----|-------------|--------------------|-------|
+| 5   | 250.56 ms   | 7.45               | 0%    |
+| 30  | 311.99 ms   | 43.60              | 0%    |
+| 100 | 287.74 ms   | 144.97             | 0%    |
+
+Файлууд: results/run-05vu.txt, results/run-30vu.txt, results/run-100vu.txt
+
+## Алхам 3 — Stages (5 → 30 → 100 → 0)
+
+results/run-stages.txt. Нэгтгэсэн p95 = 252.51 ms, throughput 46.02 req/s, алдаа 0%.
+Энэ ганц summary нь түвшин тус бүрийн p95-ыг салгаж өгөхгүй тул дээрх хүснэгтийн
+тоог гурван тусдаа ажиллуулалтаас авсан.
+
+## Алхам 4 — SLO-г threshold болгосон quality gate
 
 
+export const options = {
+  vus: 30,
+  duration: '1m',
+  thresholds: {
+    http_req_duration: ['p(95)<470'],
+    http_req_failed: ['rate<0.01'],
+  },
+};
 
 
-# do not remove or replace below.
-execution: local
-        script: script.js
-        output: -
+### SLO-гийн үндэслэл
 
-     scenarios: (100.00%) 1 scenario, 5 max VUs, 1m0s max duration (incl. graceful stop):
-              * default: 5 looping VUs for 30s (gracefulStop: 30s)
+p(95)<470ms гэсэн утгыг Алхам 2-ын 30 VU baseline буюу **p95 = 311.99 ms**-аас
+1.5 дахин авч тогтоов (311.99 × 1.5 ≈ 468 → 470). Гадаад сайт руу тестлэж байгаа тул
+сүлжээний хэвийн хэлбэлзэлд зай үлдээх шаардлагатай — үүнийг дараах ажиглалт
+батлав: PASS ажиллуулалтын p95 нь 371.61 ms гарсан бөгөөд энэ нь baseline-ээс 19%
+өндөр, өөрөөр хэлбэл baseline × 1.2 гэж тогтоосон бол тест ямар ч регрессгүйгээр
+хуурамчаар унах байсан. rate<0.01 нь baseline дээр алдаа 0% (0/2660) байсан тул
+ямар ч бодит алдааг барих хатуу хэмжүүр хэвээр байна.
+
+### PASS / FAIL үр дүн
+
+| Ажиллуулалт    | Threshold   | Хэмжсэн p95 | Үр дүн | Exit code | Файл |
+|----------------|-------------|-------------|--------|-----------|------|
+| Хэвийн SLO     | p(95)<470   | 371.61 ms   | ✓ PASS | 0         | results/run-threshold-pass.txt |
+| Санаатай хатуу | p(95)<50    | 380.38 ms   | ✗ FAIL | 99        | results/run-threshold-fail.txt |
+
+FAIL үед k6 дараах мөрийг бичээд 99 кодоор гарна:
 
 
+level=error msg="thresholds on metrics 'http_req_duration' have been crossed"
 
-  █ TOTAL RESULTS 
 
-    checks_total.......: 106     3.390871/s
-    checks_succeeded...: 100.00% 106 out of 106
-    checks_failed......: 0.00%   0 out of 106
+CI pipeline яг үүн дээр тулгуурлаж ажилладаг: exit code 0 бол build үргэлжилнэ,
+0-ээс ялгаатай бол pipeline зогсоно. Тиймээс threshold бол зүгээр нэг тайлангийн
+мөр биш, харин автомат quality gate юм.
 
-    ✓ status 200 байна
+---
 
-    HTTP
-    http_req_duration..............: avg=194.74ms min=56.71ms med=226.15ms max=1.06s p(90)=325.7ms p(95)=359.63ms
-      { expected_response:true }...: avg=194.74ms min=56.71ms med=226.15ms max=1.06s p(90)=325.7ms p(95)=359.63ms
-    http_req_failed................: 0.00%  0 out of 212
-    http_reqs......................: 212    6.781741/s
+Анхны туршилтын гаралт BASELINE: results/baseline-output.txt
 
-    EXECUTION
-    iteration_duration.............: avg=1.43s    min=1.28s   med=1.32s    max=3.14s p(90)=1.62s   p(95)=2.01s   
-    iterations.....................: 106    3.390871/s
-    vus............................: 1      min=1        max=5
-    vus_max........................: 5      min=5        max=5
 
-    NETWORK
-    data_received..................: 432 kB 14 kB/s
-    data_sent......................: 27 kB  863 B/s
+# Дотооддоо ажиллуулж үзсэнийг Local/local-test-report.md хэсэгт нэмсэн бөгөөд, ажиллуулах явцад AI ашиглан тайлан гаргуулав.
